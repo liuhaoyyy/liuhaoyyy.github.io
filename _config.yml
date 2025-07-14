@@ -1,11 +1,11 @@
 # Site settings
 title: Will Wang's Blog
-SEOTitle: 王志彪的博客
+SEOTitle: 刘昊的博客
 header-img: img/post-bg-index.jpg
-email: wzbcode@163.com
+email: 2115139482@qq.com
 description: "Every failure is leading towards success."
-keyword: "王志彪的博客, Will Wang, 王志彪, Java"
-url: "https://flyingwzb.github.io/"          # your host, for absolute URL
+keyword: "刘昊的博客"
+url: "https://liuhaoyyy.github.io/"          # your host, for absolute URL
 baseurl: ""      # for example, '/blog' if your blog hosted on 'host/blog'
 github_repo: "https://github.com/flyingwzb/flyingwzb.github.io.git" # you code repository
 
