@@ -3,94 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Liu Hao - 个人学术主页</title>
+    <title>我的云端 Python 沙盒</title>
+    <!-- 引入 Tailwind CSS 让网页看起来更现代 -->
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        :root {
-            --bg-color: #ffffff;
-            --text-color: #333333;
-            --link-color: #0366d6;
-            --border-color: #eaecef;
-        }
+        /* 给网页加上动态流光背景，与你的沙盒风格呼应 */
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            line-height: 1.6;
-            color: var(--text-color);
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 2rem 1rem;
-            background-color: var(--bg-color);
+            background: linear-gradient(-45deg, #f3e7e9, #e3eeff, #e0c3fc, #8ec5fc);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
         }
-        h1, h2, h3 {
-            font-family: "Georgia", "Times New Roman", serif; /* 学术风衬线字体 */
-            color: #24292e;
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
-        h1 { border-bottom: 2px solid var(--border-color); padding-bottom: 0.3em; }
-        h2 { border-bottom: 1px solid var(--border-color); padding-bottom: 0.3em; margin-top: 1.5em; }
-        a { color: var(--link-color); text-decoration: none; }
-        a:hover { text-decoration: underline; }
-        .profile-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; }
-        .profile-info { flex: 1; min-width: 300px; }
-        .profile-links { margin-top: 10px; font-size: 0.9em; }
-        .project-item { margin-bottom: 1.5em; }
-        .project-title { font-weight: bold; font-size: 1.1em; }
-        .tag { background: #f1f8ff; color: #0366d6; padding: 0.2em 0.5em; border-radius: 3px; font-size: 0.8em; margin-right: 5px;}
-        footer { margin-top: 3em; text-align: center; font-size: 0.8em; color: #6a737d; border-top: 1px solid var(--border-color); padding-top: 1em; }
+        .iframe-container {
+            height: calc(100vh - 120px);
+            min-height: 700px;
+        }
     </style>
 </head>
-<body>
+<body class="min-h-screen flex flex-col items-center py-8 px-4 font-sans text-gray-800">
 
-    <header class="profile-header">
-        <div class="profile-info">
-            <h1>Liu Hao</h1>
-            <p><strong>研究兴趣:</strong> 计算机视觉 (Computer Vision), 深度学习架构设计 (Deep Learning Architecture)</p>
-            <p>熟悉 Linux 开发环境，主要使用 PyTorch 进行模型构建与优化。</p>
-            <div class="profile-links">
-                <a href="mailto:your.email@example.com">[Email]</a> &nbsp;
-                <a href="https://github.com/liuhao">[GitHub]</a> &nbsp;
-                <a href="https://kaggle.com/yourprofile">[Kaggle]</a> &nbsp;
-                <a href="#">[Google Scholar]</a>
-            </div>
-        </div>
+    <!-- 网页头部标识 -->
+    <header class="text-center mb-6">
+        <h1 class="text-3xl md:text-4xl font-extrabold text-slate-800 tracking-tight drop-shadow-sm">
+            🚀 欢迎来到我的 Python 实验室
+        </h1>
+        <p class="mt-2 text-slate-600 font-medium">
+            前端由 <span class="text-blue-600 font-bold">GitHub Pages</span> 极速托管 | 算力由 <span class="text-orange-500 font-bold">Hugging Face</span> 免费驱动
+        </p>
     </header>
 
-    <section id="about">
-        <h2>关于我 (About Me)</h2>
-        <p>目前专注于计算机视觉方向的研究与开发。我在图像预处理、大类别图像分类以及序列模型生成等方面有丰富的实战经验。当前正在系统性地钻研计算机科学基础（CS 408）与高等数学，致力于在算法底层逻辑与工程实现之间建立深厚的理解。</p>
-    </section>
-
-    <section id="projects">
-        <h2>代表项目 (Selected Projects)</h2>
+    <!-- 核心：嵌入应用的玻璃拟态容器 -->
+    <main class="w-full max-w-7xl bg-white/60 backdrop-blur-xl border border-white/40 rounded-3xl shadow-2xl overflow-hidden iframe-container flex flex-col">
         
-        <div class="project-item">
-            <div class="project-title">基于 AlexNet 的百类图像分类与网络优化</div>
-            <p>针对拥有100个类别的大规模数据集，使用 PyTorch 从零搭建并训练了 AlexNet。针对多分类任务特点，优化了数据加载逻辑（手动指定本地目录以避免自动下载冲突），并将核心评估指标调整为 <strong>Top-5 Accuracy</strong>。深入研究了 SE Module、Batch Normalization (BN) 和 Layer Normalization (LN) 对网络收敛速度与精度的影响。</p>
-            <div><span class="tag">PyTorch</span><span class="tag">Image Classification</span><span class="tag">CNN</span></div>
+        <!-- Mac 风格的窗口控制条 (纯装饰) -->
+        <div class="h-10 bg-slate-100/50 border-b border-gray-200/50 flex items-center px-4 gap-2">
+            <div class="w-3.5 h-3.5 rounded-full bg-red-400 shadow-sm"></div>
+            <div class="w-3.5 h-3.5 rounded-full bg-yellow-400 shadow-sm"></div>
+            <div class="w-3.5 h-3.5 rounded-full bg-green-400 shadow-sm"></div>
+            <div class="ml-4 text-xs text-gray-400 font-mono">Gradio Engine - Running</div>
         </div>
 
-        <div class="project-item">
-            <div class="project-title">图像预处理与目标缺陷检测系统</div>
-            <p>利用 OpenCV 开发的工业级视觉检测管线。核心功能是对图像中的物体（如蛋类）进行瑕疵与破损检测。通过形态学操作、边缘检测及自适应阈值分割等传统 CV 算法，实现了高效的特征提取与缺陷定位。</p>
-            <div><span class="tag">OpenCV</span><span class="tag">Computer Vision</span><span class="tag">Image Processing</span></div>
-        </div>
+        <!-- ⚠️ 注意：请将下面 src 里面的链接替换为你自己的 Hugging Face Space 直链 -->
+        <iframe
+            src="https://liuhaoyyy-web.hf.space" 
+            id="gradio-app"
+            frameborder="0"
+            class="w-full h-full flex-grow"
+            allow="accelerometer; ambient-light-sensor; autoplay; battery; camera; document-domain; encrypted-media; fullscreen; geolocation; gyroscope; layout-animations; legacy-image-formats; magnetometer; microphone; midi; oversized-images; payment; picture-in-picture; publickey-credentials-get; sync-xhr; usb; vr; wake-lock; xr-spatial-tracking"
+        ></iframe>
+    </main>
 
-        <div class="project-item">
-            <div class="project-title">字符级文本生成模型 (CharLSTM)</div>
-            <p>基于《时间机器》(The Time Machine) 文本数据集，设计并实现了一个字符级的长短期记忆网络（LSTM）。独立完成了数据集的序列化处理、隐状态管理及模型推理，实现了连贯的文本生成。</p>
-            <div><span class="tag">PyTorch</span><span class="tag">NLP</span><span class="tag">LSTM</span></div>
-        </div>
-    </section>
-
-    <section id="skills">
-        <h2>技术栈 (Technical Skills)</h2>
-        <ul>
-            <li><strong>编程与框架:</strong> Python, C++, PyTorch, OpenCV</li>
-            <li><strong>系统与工具:</strong> Linux, Git, SSH 远程开发 (Ngrok内网穿透), Kaggle 环境部署</li>
-            <li><strong>理论基础:</strong> 扎实的数学基础（微积分、线性代数、概率论），深入理解前向/反向传播逻辑、常见激活函数（GELU/ReLU）及网络归一化机制。</li>
-        </ul>
-    </section>
-
-    <footer>
-        <p>&copy; 2026 Liu Hao. Last updated: May 2026.</p>
+    <footer class="mt-8 text-sm text-slate-500">
+        &copy; 2024 Python Web IDE. All rights reserved.
     </footer>
 
 </body>
