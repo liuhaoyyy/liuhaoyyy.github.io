@@ -153,7 +153,21 @@
                 <!-- 🌟 核心：PDF 嵌入标签 -->
                 <!-- 这里的 src 就是你传到 github 里的文件名，放在同一级目录下填相对路径即可 -->
                 <embed src="./alex.pdf" type="application/pdf" class="w-full h-full flex-grow bg-white/30" />
-                
+                    <div class="font-bold text-slate-700 text-sm flex items-center gap-2">
+                        <span>📄</span> alex.pdf
+                    </div>
+                    
+                    <!-- 💡 如果手机端无法内嵌预览，用户可以点击这里直接下载/全屏打开 -->
+                    <!-- 这里的 href 要填入你刚才上传的 pdf 文件名 -->
+                    <a href="./alex.pdf" target="_blank" class="text-xs bg-white/90 hover:bg-white text-blue-600 px-4 py-1.5 rounded-full shadow-sm border border-blue-100 transition-all flex items-center gap-1.5 font-bold hover:scale-105">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                        下载/全屏预览
+                    </a>
+                </div>
+
+                <!-- 🌟 核心：PDF 嵌入标签 -->
+                <!-- 这里的 src 就是你传到 github 里的文件名，放在同一级目录下填相对路径即可 -->
+                <embed src="./alex.pdf" type="application/pdf" class="w-full h-full flex-grow bg-white/30" />
                 <!-- 备选方案：如果 embed 标签在某些旧浏览器失效，可以用 iframe (上面这行和下面这行二选一，通常 embed 对 pdf 支持更好) -->
                 <!-- <iframe src="./math_notes.pdf" class="w-full h-full flex-grow border-0"></iframe> -->
             </div>
