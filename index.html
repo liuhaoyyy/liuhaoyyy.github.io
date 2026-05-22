@@ -1,4 +1,4 @@
-  <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -65,7 +65,7 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* 确保 iframe 容器高度合适 */
+        /* 确保 iframe 和 embed 容器高度合适 */
         .iframe-wrapper {
             height: calc(100vh - 160px);
             min-height: 600px;
@@ -78,11 +78,11 @@
     <nav class="w-full max-w-7xl mx-auto p-4 flex justify-between items-center z-50">
         <div class="flex items-center gap-3">
             <div class="w-10 h-10 rounded-full bg-white/50 flex items-center justify-center text-xl shadow-sm backdrop-blur-sm">
-                
+                🎓
             </div>
             <span class="font-bold text-xl tracking-wide text-slate-800">学习主枢</span>
         </div>
-        <!-- 返回主页按钮 (默认隐藏，进入二级页面时显示) -->
+        <!-- 返回主页按钮 -->
         <button id="back-btn" onclick="navigateTo('home-view')" class="hidden glass-card px-5 py-2 text-sm font-bold text-slate-700 flex items-center gap-2 hover:bg-white/80">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
             返回分类
@@ -96,7 +96,7 @@
         <div id="home-view" class="page-view active flex-col items-center w-full mt-10">
             <header class="text-center mb-12">
                 <h1 class="text-4xl md:text-6xl font-extrabold text-slate-800 tracking-tight drop-shadow-sm mb-4">
-                    刘昊的数字学习空间
+                    我的数字学习空间
                 </h1>
                 <p class="text-lg text-slate-700 font-medium">选择一个模块开始今天的探索</p>
             </header>
@@ -104,68 +104,74 @@
             <!-- 四大分类网格 -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 w-full px-4">
                 
-                <!-- 卡片 1：高数 -->
                 <div onclick="navigateTo('math-view')" class="glass-card p-8 flex flex-col items-center text-center">
-                    <div class="w-20 h-20 rounded-full bg-blue-100/60 flex items-center justify-center text-4xl mb-4 shadow-inner">
-                        
-                    </div>
+                    <div class="w-20 h-20 rounded-full bg-blue-100/60 flex items-center justify-center text-4xl mb-4 shadow-inner">📐</div>
                     <h2 class="text-2xl font-bold text-slate-800 mb-2">高等数学</h2>
-                    <p class="text-slate-600 text-sm">微积分、线性代数与概率论笔记、公式大全及可视化推导。</p>
+                    <p class="text-slate-600 text-sm">点击查看复习笔记 PDF</p>
                 </div>
 
-                <!-- 卡片 2：专业课 -->
                 <div onclick="navigateTo('major-view')" class="glass-card p-8 flex flex-col items-center text-center">
-                    <div class="w-20 h-20 rounded-full bg-purple-100/60 flex items-center justify-center text-4xl mb-4 shadow-inner">
-                        
-                    </div>
+                    <div class="w-20 h-20 rounded-full bg-purple-100/60 flex items-center justify-center text-4xl mb-4 shadow-inner">📚</div>
                     <h2 class="text-2xl font-bold text-slate-800 mb-2">专业核心课</h2>
-                    <p class="text-slate-600 text-sm">核心课程大纲、期末复习资料、思维导图与课程设计。</p>
+                    <p class="text-slate-600 text-sm">核心课程大纲与资料</p>
                 </div>
 
-                <!-- 卡片 3：英语 -->
                 <div onclick="navigateTo('english-view')" class="glass-card p-8 flex flex-col items-center text-center">
-                    <div class="w-20 h-20 rounded-full bg-yellow-100/60 flex items-center justify-center text-4xl mb-4 shadow-inner">
-                        
-                    </div>
+                    <div class="w-20 h-20 rounded-full bg-yellow-100/60 flex items-center justify-center text-4xl mb-4 shadow-inner">🌍</div>
                     <h2 class="text-2xl font-bold text-slate-800 mb-2">英语强化</h2>
-                    <p class="text-slate-600 text-sm">四六级/考研词汇速记、长难句分析与听力真题训练区。</p>
+                    <p class="text-slate-600 text-sm">词汇速记与长难句分析</p>
                 </div>
 
-                <!-- 卡片 4：Python 实验室 -->
                 <div onclick="navigateTo('python-view')" class="glass-card p-8 flex flex-col items-center text-center relative overflow-hidden">
                     <div class="absolute top-0 right-0 bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-bl-lg">Live</div>
-                    <div class="w-20 h-20 rounded-full bg-green-100/60 flex items-center justify-center text-4xl mb-4 shadow-inner">
-                        
-                    </div>
+                    <div class="w-20 h-20 rounded-full bg-green-100/60 flex items-center justify-center text-4xl mb-4 shadow-inner">🐍</div>
                     <h2 class="text-2xl font-bold text-slate-800 mb-2">Python 实验室</h2>
-                    <p class="text-slate-600 text-sm">云端代码沙盒，连接 HF 算力，支持 OpenCV 与动态可视化。</p>
+                    <p class="text-slate-600 text-sm">云端代码沙盒运行环境</p>
                 </div>
 
             </div>
         </div>
 
-        <!-- ================= 二级页面：高数 ================= -->
-        <div id="math-view" class="page-view flex-col w-full h-full">
-            <div class="glass-container w-full p-8 flex-grow flex flex-col items-center justify-center text-center">
-                <div class="text-6xl mb-4"></div>
-                <h2 class="text-3xl font-bold text-slate-800 mb-4">高等数学模块建设中...</h2>
-                <p class="text-slate-600 max-w-lg">你可以在这里嵌入笔记链接（如 Notion, 语雀）或者放入 PDF 文件链接。</p>
+        <!-- ================= 二级页面：高数 (PDF 预览器) ================= -->
+        <div id="math-view" class="page-view flex-col w-full">
+            <div class="glass-container w-full flex flex-col overflow-hidden iframe-wrapper relative">
+                
+                <!-- 顶部工具栏 -->
+                <div class="h-12 bg-slate-100/70 border-b border-white/60 flex items-center justify-between px-4 z-10 backdrop-blur-md">
+                    <div class="font-bold text-slate-700 text-sm flex items-center gap-2">
+                        <span>📄</span> 高等数学 - 核心笔记.pdf
+                    </div>
+                    
+                    <!-- 💡 如果手机端无法内嵌预览，用户可以点击这里直接下载/全屏打开 -->
+                    <!-- 这里的 href 要填入你刚才上传的 pdf 文件名 -->
+                    <a href="./math_notes.pdf" target="_blank" class="text-xs bg-white/90 hover:bg-white text-blue-600 px-4 py-1.5 rounded-full shadow-sm border border-blue-100 transition-all flex items-center gap-1.5 font-bold hover:scale-105">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                        下载/全屏预览
+                    </a>
+                </div>
+
+                <!-- 🌟 核心：PDF 嵌入标签 -->
+                <!-- 这里的 src 就是你传到 github 里的文件名，放在同一级目录下填相对路径即可 -->
+                <embed src="./math_notes.pdf" type="application/pdf" class="w-full h-full flex-grow bg-white/30" />
+                
+                <!-- 备选方案：如果 embed 标签在某些旧浏览器失效，可以用 iframe (上面这行和下面这行二选一，通常 embed 对 pdf 支持更好) -->
+                <!-- <iframe src="./math_notes.pdf" class="w-full h-full flex-grow border-0"></iframe> -->
             </div>
         </div>
 
         <!-- ================= 二级页面：专业课 ================= -->
         <div id="major-view" class="page-view flex-col w-full h-full">
             <div class="glass-container w-full p-8 flex-grow flex flex-col items-center justify-center text-center">
-                <div class="text-6xl mb-4"></div>
+                <div class="text-6xl mb-4">📚</div>
                 <h2 class="text-3xl font-bold text-slate-800 mb-4">专业课模块建设中...</h2>
-                <p class="text-slate-600 max-w-lg">未来可在此处整理各科目的历年真题与重点归纳。</p>
+                <p class="text-slate-600 max-w-lg">参考“高数”模块的代码，你也可以把这里的结构替换成其他的 PDF。</p>
             </div>
         </div>
 
         <!-- ================= 二级页面：英语 ================= -->
         <div id="english-view" class="page-view flex-col w-full h-full">
             <div class="glass-container w-full p-8 flex-grow flex flex-col items-center justify-center text-center">
-                <div class="text-6xl mb-4"></div>
+                <div class="text-6xl mb-4">🌍</div>
                 <h2 class="text-3xl font-bold text-slate-800 mb-4">英语强化模块建设中...</h2>
                 <p class="text-slate-600 max-w-lg">可以在这里嵌入在线词典、每日一句或是英语播客组件。</p>
             </div>
@@ -173,22 +179,29 @@
 
         <!-- ================= 二级页面：Python 实验室 ================= -->
         <div id="python-view" class="page-view flex-col w-full">
-            <div class="glass-container w-full flex flex-col overflow-hidden iframe-wrapper">
-                <!-- Mac 风格状态栏 -->
-                <div class="h-10 bg-slate-100/50 border-b border-white/40 flex items-center px-4 gap-2">
-                    <div class="w-3.5 h-3.5 rounded-full bg-red-400"></div>
-                    <div class="w-3.5 h-3.5 rounded-full bg-yellow-400"></div>
-                    <div class="w-3.5 h-3.5 rounded-full bg-green-400"></div>
-                    <div class="ml-4 text-xs text-slate-500 font-mono flex items-center gap-2">
-                        <span class="relative flex h-2 w-2">
-                          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                          <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
-                        </span>
-                        Hugging Face Cloud Engine Connected
+            <div class="glass-container w-full flex flex-col overflow-hidden iframe-wrapper relative">
+                <div class="h-12 bg-slate-100/70 border-b border-white/60 flex items-center justify-between px-4 z-10 backdrop-blur-md">
+                    <div class="flex items-center gap-2">
+                        <div class="w-3.5 h-3.5 rounded-full bg-red-400"></div>
+                        <div class="w-3.5 h-3.5 rounded-full bg-yellow-400"></div>
+                        <div class="w-3.5 h-3.5 rounded-full bg-green-400"></div>
+                        <div class="ml-4 text-xs text-slate-500 font-mono flex items-center gap-2">
+                            <span class="relative flex h-2 w-2">
+                              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                              <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                            </span>
+                            HF Cloud Engine
+                        </div>
                     </div>
+                    
+                    <!-- ⚠️ 记得把这里替换为你自己的 .hf.space 链接 -->
+                    <a href="https://liuhaoyyy-web.hf.space" target="_blank" class="text-xs bg-white/90 hover:bg-white text-blue-600 px-4 py-1.5 rounded-full shadow-sm border border-blue-100 transition-all flex items-center gap-1.5 font-bold hover:scale-105">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                        在新窗口全屏打开
+                    </a>
                 </div>
 
-                <!-- ⚠️ 修改此处 src：替换为你的 Hugging Face 直链 -->
+                <!-- ⚠️ 记得把这里替换为你自己的 .hf.space 链接 -->
                 <iframe
                     src="https://liuhaoyyy-web.hf.space" 
                     id="gradio-app"
@@ -201,34 +214,30 @@
 
     </main>
 
-    <footer class="mt-8 mb-4 text-sm text-slate-600 font-medium">
+    <footer class="mt-8 mb-4 text-sm text-slate-600 font-medium text-center">
         &copy; 2024 My Learning Space. Hosted on GitHub Pages.
     </footer>
 
     <!-- JavaScript：处理页面切换逻辑 -->
     <script>
         function navigateTo(viewId) {
-            // 1. 隐藏所有页面视图
             const views = document.querySelectorAll('.page-view');
             views.forEach(view => {
                 view.classList.remove('active');
             });
 
-            // 2. 显示目标视图
             const targetView = document.getElementById(viewId);
             if (targetView) {
                 targetView.classList.add('active');
             }
 
-            // 3. 控制“返回”按钮的显示/隐藏
             const backBtn = document.getElementById('back-btn');
             if (viewId === 'home-view') {
-                backBtn.classList.add('hidden'); // 在首页隐藏返回按钮
+                backBtn.classList.add('hidden');
             } else {
-                backBtn.classList.remove('hidden'); // 在二级页面显示返回按钮
+                backBtn.classList.remove('hidden');
             }
             
-            // 将页面平滑滚动回顶部
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
     </script>
