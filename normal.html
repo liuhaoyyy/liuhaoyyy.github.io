@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BN vs LRN 3D 可视化</title>
+    <!-- 引入 Plotly.js -->
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+        .header { text-align: center; margin-bottom: 20px; }
+        .controls {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            max-width: 800px;
+            margin: 0 auto 20px auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .charts-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+        .chart-box {
+            background: white;
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            width: 48%;
+            min-width: 400px;
+        }
+        input[type="range"] { flex-grow: 1; }
+        input[type="number"] { width: 60px; padding: 5px; font-size: 16px; text-align: center;}
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>🧠 BN vs LRN 3D 可视化实验台</h1>
+        <p>观察归一化层如何对抗内部协变量偏移 (Internal Covariate Shift)</p>
+    </div>
+
+    <div class="controls">
+        <div class="control-group">
+            <label><strong>选择归一化机制:</strong></label>
+            <label><input type="radio" name="normType" value="BN" checked onchange="updatePlots()"> Batch Normalization (BN)</label>
+            <label><input type="radio" name="normType" value="LRN" onchange="updatePlots()"> Local Response Normalization (LRN)</label>
+        </div>
+        <div class="control-group">
+            <label><strong>当前训练轮次 (Epoch):</strong></label>
+            <!-- 滑动条和数字输入框双向绑定 -->
+            <input type="range" id="epochSlider" min="0" max="50" value="0" oninput="syncEpoch('slider')">
+            <input type="number" id="epochInput" min="0" max="50" value="0" oninput="syncEpoch('input')">
+        </div>
+    </div>
+
+    <div class="charts-container">
+        <div class="chart-box">
+            <div id="plot-raw"></div>
+        </div>
+        <div class="chart-box">
+            <div id="plot-norm"></div>
+        </div>
+    </div>
+
+<script>
+    // ---------------- 数学与数据模拟模块 ----------------
+
+    // 生成正态分布噪声 (Box-Muller 变换)
+    function randomNormal(mean=0, std=1) {
+        let u1 = Math.random(), u2 = Math.random();
+        let z0 = Math.sqrt(-2.0 * Math.log(u1)) * Math.cos(2.0 * Math.PI * u2);
+        return z0 * std + mean;
+    }
+
+    // 模拟数据生成 (30x30网格)
+    function simulateData(epoch, gridSize = 30) {
+        let x = [], y = [], z = [];
+        let shift = epoch * 0.5;
+        let scale = 1 + (epoch * 0.1);
+
+        for (let i = 0; i < gridSize; i++) {
+            let x_val = -3 + (6 * i / (gridSize - 1));
+            x.push(x_val);
+            y.push(x_val);
+        }
+
+        for (let i = 0; i < gridSize; i++) {
+            let row = [];
+            for (let j = 0; j < gridSize; j++) {
+                let dx = x[j] - shift/5;
+                let dy = y[i] + shift/5;
+                // 模拟高斯峰 + 均值偏移 + 噪声
+                let val = scale * Math.exp(-(dx*dx + dy*dy)) * 10 + shift;
+                val += randomNormal(0, scale);
+                row.push(val);
+            }
+            z.push(row);
+        }
+        return {x, y, z};
+    }
+
+    // 批量归一化 (BN)
+    function applyBN(z) {
+        let sum = 0, count = 0;
+        let n = z.length, m = z[0].length;
+
+        // 计算均值
+        for(let i=0; i<n; i++) {
+            for(let j=0; j<m; j++) { sum += z[i][j]; count++; }
+        }
+        let mean = sum / count;
+
+        // 计算方差
+        let sqSum = 0;
+        for(let i=0; i<n; i++) {
+            for(let j=0; j<m; j++) { sqSum += Math.pow(z[i][j] - mean, 2); }
+        }
+        let std = Math.sqrt(sqSum / count);
+
+        // 归一化
+        let z_norm = [];
+        for(let i=0; i<n; i++) {
+            let row = [];
+            for(let j=0; j<m; j++) {
+                row.push((z[i][j] - mean) / (std + 1e-5));
+            }
+            z_norm.push(row);
+        }
+        return z_norm;
+    }
+
+    // 局部响应归一化 (LRN - 简化空间版本)
+    function applyLRN(z, k=2, alpha=1e-4, beta=0.75) {
+        let n = z.length, m = z[0].length;
+        let z_norm = [];
+
+        for(let i=0; i<n; i++) {
+            let row = [];
+            for(let j=0; j<m; j++) {
+                // 计算 3x3 邻域的平方和
+                let localSqSum = 0;
+                for(let di=-1; di<=1; di++) {
+                    for(let dj=-1; dj<=1; dj++) {
+                        let ni = i + di, nj = j + dj;
+                        if(ni>=0 && ni<n && nj>=0 && nj<m) {
+                            localSqSum += Math.pow(z[ni][nj], 2);
+                        }
+                    }
+                }
+                localSqSum /= 9;
+                row.push(z[i][j] / Math.pow(k + alpha * localSqSum, beta));
+            }
+            z_norm.push(row);
+        }
+        return z_norm;
+    }
+
+    // ---------------- UI 与 渲染模块 ----------------
+
+    // 同步滑块和输入框的值
+    function syncEpoch(source) {
+        let slider = document.getElementById('epochSlider');
+        let input = document.getElementById('epochInput');
+
+        if(source === 'slider') {
+            input.value = slider.value;
+        } else {
+            // 限制输入范围
+            let val = parseInt(input.value);
+            if(val < 0) val = 0;
+            if(val > 50) val = 50;
+            if(isNaN(val)) val = 0;
+            slider.value = val;
+            input.value = val;
+        }
+        updatePlots();
+    }
+
+    // 渲染或更新图表
+    function updatePlots() {
+        let epoch = parseInt(document.getElementById('epochInput').value);
+        let normType = document.querySelector('input[name="normType"]:checked').value;
+
+        // 生成数据
+        let data = simulateData(epoch);
+        let z_norm = normType === 'BN' ? applyBN(data.z) : applyLRN(data.z);
+
+        let commonLayout = {
+            width: 500, height: 500,
+            margin: {l:0, r:0, b:0, t:40},
+            scene: {
+                xaxis: {title: 'W'},
+                yaxis: {title: 'H'},
+                zaxis: {title: 'Activation'}
+            }
+        };
+
+        // 图 1：原始数据
+        let traceRaw = [{
+            z: data.z, x: data.x, y: data.y, type: 'surface',
+            colorscale: 'Reds', showscale: false
+        }];
+        let layoutRaw = JSON.parse(JSON.stringify(commonLayout));
+        layoutRaw.title = `未归一化特征 (Epoch ${epoch})`;
+        layoutRaw.scene.zaxis.range = [-10, 40]; // 固定高度，观察飞升
+
+        // 图 2：归一化数据
+        let traceNorm = [{
+            z: z_norm, x: data.x, y: data.y, type: 'surface',
+            colorscale: 'Blues', showscale: false
+        }];
+        let layoutNorm = JSON.parse(JSON.stringify(commonLayout));
+        layoutNorm.title = `${normType} 归一化后`;
+        layoutNorm.scene.zaxis.range = [-5, 5]; // 固定高度，观察稳定性
+
+        // 使用 react 进行高效重绘
+        Plotly.react('plot-raw', traceRaw, layoutRaw);
+        Plotly.react('plot-norm', traceNorm, layoutNorm);
+    }
+
+    // 初始化渲染
+    window.onload = updatePlots;
+
+</script>
+</body>
+</html>
